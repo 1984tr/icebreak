@@ -1,0 +1,48 @@
+{
+  "project_info": {
+    "project_number": "1084440897448",
+    "firebase_url": "https://icebreak-fdd7b.firebaseio.com",
+    "project_id": "icebreak-fdd7b",
+    "storage_bucket": "icebreak-fdd7b.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:1084440897448:android:785b2408fde33817ec5f9d",
+        "android_client_info": {
+          "package_name": "com.tr1984.icebreak"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "1084440897448-j2t5mcmv7mdmld97p867k3efq3q6qmec.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.tr1984.icebreak",
+            "certificate_hash": "70b6be249e2392359972e1a9356acf0cf39583fe"
+          }
+        },
+        {
+          "client_id": "1084440897448-fbm7f2d97tnenrrfghb08tbkfdl0cnub.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCAYCtxoZ5waGjd183yiuRWKst4gcAGQZM"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "1084440897448-fbm7f2d97tnenrrfghb08tbkfdl0cnub.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
