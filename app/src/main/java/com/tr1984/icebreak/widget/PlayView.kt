@@ -7,6 +7,7 @@ import android.graphics.Paint
 import android.graphics.Rect
 import android.util.AttributeSet
 import android.view.View
+import com.tr1984.icebreak.model.Player
 import com.tr1984.icebreak.util.Logger
 
 class PlayView : View {
@@ -21,8 +22,10 @@ class PlayView : View {
 
     private var boundary = Rect()
     private var radius = 0f
-    private var cX = Float.MAX_VALUE
-    private var cY = Float.MAX_VALUE
+    var aCX = Float.MAX_VALUE
+    var aCY = Float.MAX_VALUE
+    var bCX = Float.MAX_VALUE
+    var bCY = Float.MAX_VALUE
 
     constructor(context: Context) : super(context)
 
@@ -37,13 +40,15 @@ class PlayView : View {
 
     override fun onLayout(changed: Boolean, left: Int, top: Int, right: Int, bottom: Int) {
         super.onLayout(changed, left, top, right, bottom)
-        if (right - left > 0 && cX == Float.MAX_VALUE) {
-            cX = (width / 2).toFloat()
+        if (right - left > 0 && aCX == Float.MAX_VALUE) {
+            aCX = (width / 2).toFloat()
+            bCX = aCX
             radius = (width / 30).toFloat()
             boundary.set(0, 0, width, height)
         }
-        if (bottom - top > 0 && cY == Float.MAX_VALUE) {
-            cY = (height / 2).toFloat()
+        if (bottom - top > 0 && aCY == Float.MAX_VALUE) {
+            aCY = (height / 2).toFloat()
+            bCY = aCY
         }
     }
 
@@ -57,27 +62,48 @@ class PlayView : View {
 
         with(paint) {
             style = Paint.Style.FILL
-            color = Color.BLUE
         }
-        canvas?.drawCircle(cX, cY, radius, paint)
+        paint.color = Color.BLUE
+        canvas?.drawCircle(bCX, bCY, radius, paint)
+        paint.color = Color.RED
+        canvas?.drawCircle(aCX, aCY, radius, paint)
     }
 
-    fun update(accX: Float, accY: Float) {
-        cX -= accX
-        if (cX <= radius) {
-            cX = radius
-        }
-        if (cX >= boundary.right - radius) {
-            cX = boundary.right - radius
+    fun update(player: Player) {
+        if (player.uid == "a") {
+            aCX -= player.x
+            if (aCX <= radius) {
+                aCX = radius
+            }
+            if (aCX >= boundary.right - radius) {
+                aCX = boundary.right - radius
+            }
+
+            aCY += player.y
+            if (aCY <= radius) {
+                aCY = radius
+            }
+            if (aCY >= boundary.bottom - radius) {
+                aCY = boundary.bottom - radius
+            }
+        } else {
+            bCX -= player.x
+            if (bCX <= radius) {
+                bCX = radius
+            }
+            if (bCX >= boundary.right - radius) {
+                bCX = boundary.right - radius
+            }
+
+            bCX += player.y
+            if (bCX <= radius) {
+                bCX = radius
+            }
+            if (bCX >= boundary.bottom - radius) {
+                bCX = boundary.bottom - radius
+            }
         }
 
-        cY += accY
-        if (cY <= radius) {
-            cY = radius
-        }
-        if (cY >= boundary.bottom - radius) {
-            cY = boundary.bottom - radius
-        }
         invalidate()
     }
 
