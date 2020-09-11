@@ -14,6 +14,7 @@ class PlayView : View {
 
     private val stdWidth = 1000
     private val stdRadius = 50
+    private val textBottomMargin = 10f
     private val paint = Paint().apply {
         isAntiAlias = true
         strokeWidth = 4f
@@ -65,7 +66,7 @@ class PlayView : View {
             c.drawCircle(player.x, player.y, radius, paint)
             paint.color = Color.BLACK
             val width = paint.measureText(player.uid)
-            c.drawText(player.uid, player.x - width / 2, player.y - radius - 10f, paint)
+            c.drawText(player.uid, player.x - width / 2, player.y - radius - textBottomMargin, paint)
         }
     }
 
@@ -86,7 +87,6 @@ class PlayView : View {
         if (cY >= boundary.bottom - radius) {
             cY = boundary.bottom - radius
         }
-
 
         callback.invoke(cX, cY)
     }
