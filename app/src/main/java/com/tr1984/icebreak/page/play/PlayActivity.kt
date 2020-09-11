@@ -1,13 +1,15 @@
 package com.tr1984.icebreak.page.play
 
 import android.graphics.Color
+import android.graphics.PointF
 import android.os.Bundle
-import android.util.Log
 import com.tr1984.icebreak.databinding.ActivityPlayBinding
 import com.tr1984.icebreak.model.Player
 import com.tr1984.icebreak.page.BaseActivity
 import com.tr1984.icebreak.util.FirebaseRealtimeDatabaseHelper
 import com.tr1984.icebreak.util.SensorHelper
+import io.reactivex.disposables.Disposable
+import io.reactivex.subjects.PublishSubject
 
 class PlayActivity : BaseActivity() {
 
@@ -16,6 +18,7 @@ class PlayActivity : BaseActivity() {
     private val fbHelper = FirebaseRealtimeDatabaseHelper {
         binding.playView.update(it)
     }
+    private var disposable: Disposable? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -27,7 +30,9 @@ class PlayActivity : BaseActivity() {
             }
 
         SensorHelper(this) { accX, accY ->
-            fbHelper.write(Player("a", Color.RED, accX, accY))
+            binding.playView.move(accX, accY) { cx, cy ->
+                fbHelper.write(Player("tris", "#0000ff", cx, cy))
+            }
         }.also {
             sensorHelper = it
         }
@@ -37,5 +42,6 @@ class PlayActivity : BaseActivity() {
         super.onDestroy()
         sensorHelper.destroy()
         fbHelper.destroy()
+        disposable?.dispose()
     }
 }

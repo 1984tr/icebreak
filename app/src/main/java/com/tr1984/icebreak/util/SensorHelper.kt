@@ -36,7 +36,7 @@ class SensorHelper(context: Context, val positionCallback: (Float, Float) -> Uni
     }
 
     init {
-        mgr.registerListener(eventListener, sensor, SensorManager.SENSOR_DELAY_FASTEST)
+        mgr.registerListener(eventListener, sensor, SensorManager.SENSOR_DELAY_GAME)
     }
 
     fun destroy() {
