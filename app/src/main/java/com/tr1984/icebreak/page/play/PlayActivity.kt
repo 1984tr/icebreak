@@ -5,7 +5,6 @@ import com.tr1984.icebreak.databinding.ActivityPlayBinding
 import com.tr1984.icebreak.model.Player
 import com.tr1984.icebreak.page.BaseActivity
 import com.tr1984.icebreak.util.FirebaseRealtimeDatabaseHelper
-import com.tr1984.icebreak.util.SensorHelper
 
 class PlayActivity : BaseActivity() {
 
