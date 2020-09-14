@@ -75,29 +75,29 @@ class JoystickView : View {
                 if (pPoint.x >= 0) {
                     if (pPoint.x > maxX) {
                         pointer.x = maxX + center.x
-                        x = pointer.x
+                        //x = pointer.x
                     }
                 } else {
                     if (pPoint.x < maxX) {
                         pointer.x = maxX + center.x
-                        x = pointer.x
+                        //x = pointer.x
                     }
                 }
                 if (pPoint.y >= 0) {
                     if (pPoint.y > maxY) {
                         pointer.y = -maxY + center.y
-                        y = pointer.y
+                       // y = pointer.y
                     }
                 } else {
                     if (pPoint.y < maxY) {
                         pointer.y = -maxY + center.y
-                        y = pointer.y
+                        //y = pointer.y
                     }
                 }
-
+                
                 lastDx = -(x - oldX)
                 lastDy = y - oldY
-                positionCallback?.invoke(-(x - oldX), y - oldY)
+                positionCallback?.invoke(lastDx, lastDy)
 
                 oldX = x
                 oldY = y
