@@ -6,8 +6,15 @@ import android.graphics.Color
 import android.graphics.Paint
 import android.graphics.PointF
 import android.util.AttributeSet
+import android.util.Log
 import android.view.MotionEvent
 import android.view.View
+import io.reactivex.Observable
+import io.reactivex.android.schedulers.AndroidSchedulers
+import io.reactivex.disposables.Disposable
+import io.reactivex.schedulers.Schedulers
+import java.util.concurrent.TimeUnit
+import kotlin.math.abs
 import kotlin.math.atan2
 
 class JoystickView : View {
@@ -28,7 +35,11 @@ class JoystickView : View {
     private var lastDx = 0f
     private var lastDy = 0f
 
+    private var validDx = 0f
+    private var validDy = 0f
+
     var positionCallback: ((Float, Float) -> Unit)? = null
+    var timerDisposable: Disposable? = null
 
     constructor(context: Context?) : super(context)
 
@@ -39,7 +50,7 @@ class JoystickView : View {
         attrs,
         defStyleAttr
     )
-    
+
     override fun onLayout(changed: Boolean, left: Int, top: Int, right: Int, bottom: Int) {
         super.onLayout(changed, left, top, right, bottom)
         if (width > 0 && radius <= 0) {
@@ -63,8 +74,8 @@ class JoystickView : View {
                 oldY = event.y
             }
             MotionEvent.ACTION_MOVE -> {
-                pointer.x += x - oldX
-                pointer.y += y - oldY
+                pointer.x += (x - oldX)
+                pointer.y += (y - oldY)
 
                 // 1. 중심점과 현재 좌표의 각도 구하기
                 val pCenter = PointF(0f, 0f)
@@ -86,7 +97,7 @@ class JoystickView : View {
                 if (pPoint.y >= 0) {
                     if (pPoint.y > maxY) {
                         pointer.y = -maxY + center.y
-                       // y = pointer.y
+                        // y = pointer.y
                     }
                 } else {
                     if (pPoint.y < maxY) {
@@ -94,15 +105,39 @@ class JoystickView : View {
                         //y = pointer.y
                     }
                 }
-                
+
                 lastDx = -(x - oldX)
                 lastDy = y - oldY
+
+                val absX = abs(lastDx)
+                val absY = abs(lastDy)
+                if (abs(absX - absY) >= 3) {
+                    validDx = lastDx
+                    validDy = lastDy
+                } else {
+                    if (abs(lastDx) > 2) {
+                        validDx = lastDx
+                    }
+                    if (abs(lastDy) > 2) {
+                        validDy = lastDy
+                    }
+                }
+
                 positionCallback?.invoke(lastDx, lastDy)
+                Log.d("test", "lastDx: $lastDx, lastDy: $lastDy")
+                timerDisposable?.dispose()
+                timerDisposable = Observable.interval(10L, TimeUnit.MILLISECONDS)
+                    .subscribeOn(Schedulers.io())
+                    .observeOn(AndroidSchedulers.mainThread())
+                    .subscribe({
+                        positionCallback?.invoke(validDx, validDy)
+                    }, { it.printStackTrace() })
 
                 oldX = x
                 oldY = y
             }
             MotionEvent.ACTION_UP -> {
+                timerDisposable?.dispose()
                 pointer.x = center.x
                 pointer.y = center.y
             }
